@@ -14,7 +14,7 @@
 
 .chatbar {
   border: 4px solid var(--foreground-rgb);
-  border-radius: calc(var(--btn-radius));
+  border-radius: calc(var(--default-radius));
   
   margin: 0 4px;
   padding: 8px;

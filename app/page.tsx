@@ -1,14 +1,15 @@
 'use client';
-import Image from 'next/image'
 import styles from './page.module.css'
-import { Primary, Secondary } from './components/Button/button'
+import ChatActions from './components/ChatPanel/chatActions';
+import MessagePanel from './components/ChatPanel/messageScreen';
+import ChatPanelLayout from './components/ChatPanel/layout';
+import VideoPanelLayout from './components/VideoPanel/layout';
 
 export default function Home() {
   return (
     <main className={styles.main}>
-      I am working!!
-      <Primary label="Send" handleClick={() => console.log('Primary Button Clicked')} />
-      <Secondary label="Next" handleClick={() => console.log('Secondary Button Clicked')} />
+      <VideoPanelLayout />
+      <ChatPanelLayout />
     </main>
   )
 }

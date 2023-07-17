@@ -5,7 +5,7 @@
   padding: 1em 2em;
   outline: none;
   border: 5em;
-  border-radius: var(--btn-radius);
+  border-radius: var(--default-radius);
 
   transform: translate(0);
   transition: box-shadow 0.2s;
@@ -29,13 +29,13 @@
 .btn:after {
   content: "";
   position: absolute;
-  margin: calc(var(--btn-radius)/2);
+  margin: calc(var(--default-radius)/2);
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
   z-index: -1;
-  border-radius: var(--btn-radius);
+  border-radius: var(--default-radius);
   background-color: var(--background-rgb);
 }
 

@@ -4,10 +4,11 @@
     --secondary-btn: rgb(37, 37, 39);
     --glow-shadow: rgba(255, 255, 255, 0.4);
     --faint-shadow: rgba(128, 128, 128, 0.1);
-    --btn-radius: 8px;
+    --default-radius: 8px;
     --foreground-rgb: rgb(20, 20, 20);
     --background-rgb: rgb(0, 0, 0);
     --font-rgb: rgb(255, 255, 255);
+    --default-padding: 8px;
 }
 
 * {
@@ -27,6 +28,6 @@ html {
 }
 
 body {
-  color: rgb(var(--font-rgb));
-  background: rgb(var(--background-rgb));
+  color: var(--font-rgb);
+  background: var(--background-rgb);
 }
