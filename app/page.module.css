@@ -1,5 +1,5 @@
 .main {
-  padding: 1vw;
+  padding: 30px;
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-column-gap: calc(var(--default-padding)*5);
@@ -7,7 +7,9 @@
 }
 
 .main>section {
-  height: calc(100% - 2vw);
+  height: 100%;
+  min-width: 0; /* To prevent content overflow */
+  min-height: 0; /* To prevent content overflow */
 }
 
 .main>section:nth-child(1) {

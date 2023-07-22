@@ -1,7 +1,7 @@
 'use client';
 import styles from './button.module.css'
 
-export const Primary = ({ label, subtitle, handleClick }: { label: String, subtitle?: String, handleClick: () => any }) => {
+export const Primary = ({ label, subtitle, handleClick }: { label: String, subtitle?: String, handleClick: (...args: any) => any }) => {
   return (
     <button
       className={`${styles.btn} ${styles["btn-primary"]}`}
@@ -13,7 +13,7 @@ export const Primary = ({ label, subtitle, handleClick }: { label: String, subti
   )
 }
 
-export const Secondary = ({ label, subtitle, handleClick }: { label: String, subtitle?: String, handleClick: () => any }) => {
+export const Secondary = ({ label, subtitle, handleClick }: { label: String, subtitle?: String, handleClick: (...args: any) => any }) => {
   return (
     <button
       className={`${styles.btn} ${styles["btn-secondary"]}`}

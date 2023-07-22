@@ -1,5 +1,5 @@
 import styles from './chatpanel.module.css'
-import MessagePanel from './messageScreen'
+import MessagePanel from './chatMessages'
 import ChatActions from './chatActions'
 
 export default function ChatPanelLayout({ children }: { children?: React.ReactNode }) {

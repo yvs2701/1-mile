@@ -1,20 +1,23 @@
 .message-screen {
-  /* height: 100%; */
-  flex: 1 0 auto;
-  overflow-y: scroll;
-  margin-bottom: calc(var(--default-padding)*3);
-  padding: calc(var(--default-padding)*3);
-  background: var(--foreground-rgb);
-  border-radius: var(--default-radius);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
+
+  margin-bottom: calc(var(--default-padding)*3);
+  padding: calc(var(--default-padding)*3);
+
+  background: var(--foreground-rgb);
+  border-radius: var(--default-radius);
+
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 
 .mssg {
   display: inline-block;
+  white-space: pre-wrap; /* preserve text formatting */
   margin: var(--default-padding) 0;
   padding: var(--default-padding) calc(var(--default-padding)*2);
 
@@ -25,7 +28,6 @@
   min-width: 50px;
   max-width: 50%;
   word-wrap: normal;
-  overflow: none;
 }
 
 .mssg-left {
