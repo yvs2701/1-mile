@@ -1,9 +1,4 @@
 .message-screen {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-
   margin-bottom: calc(var(--default-padding)*3);
   padding: calc(var(--default-padding)*3);
 
@@ -14,10 +9,22 @@
   overflow-y: scroll;
 }
 
+.scrollable {
+  position: relative;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+
+  background: var(--foreground-rgb);
+}
 
 .mssg {
   display: inline-block;
-  white-space: pre-wrap; /* preserve text formatting */
+  white-space: pre-wrap;
+  /* preserve text formatting */
   margin: var(--default-padding) 0;
   padding: var(--default-padding) calc(var(--default-padding)*2);
 
