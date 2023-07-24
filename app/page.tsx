@@ -9,7 +9,7 @@ import { Secondary } from './components/Button/button'
 import { RtmChannel } from "agora-rtm-sdk"
 import { ICameraVideoTrack, IRemoteVideoTrack, IAgoraRTCClient, IRemoteAudioTrack } from "agora-rtc-sdk-ng"
 import ChatPanelLayout from './components/ChatPanel/layout'
-import VideoPanelLayout from './components/VideoPanel/page'
+import VideoPanel from './components/VideoPanel/page'
 import anon from '@/public/anonymous-user.svg'
 import logo from '@/public/logo.png'
 
@@ -138,7 +138,7 @@ export default function Home() {
   const [currRoom, setCurrRoom] = useState<Room | null>(null)
 
   const [messages, setMessages] = useState<TMessage[]>([])
-  const [input, setInput] = useState("")
+  const [input, setInput] = useState<string>("")
 
   const [themAudio, setThemAudio] = useState<IRemoteAudioTrack>()
   const [themVideo, setThemVideo] = useState<IRemoteVideoTrack>()
@@ -161,7 +161,6 @@ export default function Home() {
         rtcClientRef.current.leave()
       }
 
-      const completed = true
       if (currRoom !== null) {
         changeRoomStatus(currRoom._id)
       }
@@ -274,7 +273,7 @@ export default function Home() {
         </div>
       </nav>
       <main className={styles.main}>
-        <VideoPanelLayout incomingVideo={themVideo} incomingAudio={themAudio} localVideo={myVideo} />
+        <VideoPanel incomingVideo={themVideo} incomingAudio={themAudio} localVideo={myVideo} />
         <ChatPanelLayout user={userId} messages={messages} handleNextClick={connectToARoom} handleSubmitClick={handleSubmitClick} />
       </main>
     </>

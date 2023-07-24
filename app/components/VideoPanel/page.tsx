@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useRef } from 'react'
 import styles from './videopanel.module.css'
 import { ICameraVideoTrack, IRemoteVideoTrack, IRemoteAudioTrack } from "agora-rtc-sdk-ng"
@@ -9,11 +10,11 @@ type TProps = {
 }
 
 const VideoPlayer = ({ videoTrack, children }: { videoTrack: IRemoteVideoTrack | ICameraVideoTrack, children?: React.ReactNode }) => {
-  const ref = useRef<any>(null)
+  const ref = useRef(null)
 
   useEffect(() => {
     const playerRef = ref.current
-    if (!videoTrack || ! playerRef) return
+    if (!videoTrack || !playerRef) return
 
     videoTrack.play(playerRef)
     return () => {
@@ -21,19 +22,23 @@ const VideoPlayer = ({ videoTrack, children }: { videoTrack: IRemoteVideoTrack |
     }
   }, [videoTrack])
 
-  return <video ref={ref} autoPlay={true}>{children}</video>
+  return (children && <video ref={ref} autoPlay={true}>{children}</video>) || <video ref={ref} autoPlay={true} />
 }
 
 export default function VideoPanel({ incomingVideo, incomingAudio, localVideo }: TProps) {
   return (
     <section className={styles["video-screen"]}>
       <div className={styles["video-stream"]}>
-        <VideoPlayer videoTrack={incomingVideo!} />
+        {
+          incomingVideo && <VideoPlayer videoTrack={incomingVideo} />
+        }
       </div>
       <div className={styles["video-stream"]}>
-        <VideoPlayer videoTrack={localVideo!}>
-          {/* Add video and mic controls */}
-        </VideoPlayer>
+        {
+          localVideo && <VideoPlayer videoTrack={localVideo}>
+            {/* Add video and mic controls */}
+          </VideoPlayer>
+        }
       </div>
     </section>
   )

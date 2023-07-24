@@ -1,3 +1,4 @@
+'use client';
 import styles from './chatpanel.module.css'
 import MessagePanel from './chatMessages'
 import ChatActions from './chatActions'
