@@ -21,6 +21,7 @@ let cached = globalThisWithDB.mongoose
 async function dbConnect() {
   // ! (non-null operator of TypeScript) tells TS compiler that the variable will not be null or undefined in this context
   if (cached.conn) {
+    console.log('Using cached connection to the Database!')
     return cached.conn
   }
 

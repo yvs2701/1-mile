@@ -29,8 +29,8 @@
   padding: var(--default-padding);
   height: 75px;
 
-  background: var(--foreground-rgb);
-  box-shadow: 0 0 10px var(--faint-shadow);
+  background: var(--background-rgb);
+  box-shadow: 0 0 2px 0 var(--glow-shadow);
 }
 
 .navbar-left {

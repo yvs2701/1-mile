@@ -1,33 +1,39 @@
 import { useEffect, useRef } from 'react'
 import styles from './videopanel.module.css'
+import { ICameraVideoTrack, IRemoteVideoTrack, IRemoteAudioTrack } from "agora-rtc-sdk-ng"
 
-export default function VideoPanel() {
-  const videoRef = useRef<any>(null)
+type TProps = {
+  incomingVideo?: IRemoteVideoTrack
+  incomingAudio?: IRemoteAudioTrack
+  localVideo?: ICameraVideoTrack
+}
 
-  const getVideo = () => {
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: false })
-      .then(stream => {
-        let video = videoRef.current!
-        video.srcObject = stream
-        video.play()
-      })
-      .catch(err => {
-        console.error("error:", err)
-      })
-  }
+const VideoPlayer = ({ videoTrack, children }: { videoTrack: IRemoteVideoTrack | ICameraVideoTrack, children?: React.ReactNode }) => {
+  const ref = useRef<any>(null)
 
   useEffect(() => {
-    getVideo()
-  }, [])
+    const playerRef = ref.current
+    if (!videoTrack || ! playerRef) return
 
+    videoTrack.play(playerRef)
+    return () => {
+      videoTrack.stop()
+    }
+  }, [videoTrack])
+
+  return <video ref={ref} autoPlay={true}>{children}</video>
+}
+
+export default function VideoPanel({ incomingVideo, incomingAudio, localVideo }: TProps) {
   return (
     <section className={styles["video-screen"]}>
       <div className={styles["video-stream"]}>
-        <video src='https://media.istockphoto.com/id/1254202819/video/young-man-looking-to-camera-and-listening.mp4?s=mp4-640x640-is&k=20&c=4NSlTs-TzYXT7vn2uiXj9MXdc_7U5wt8_PcNy4P-4p8=' autoPlay={true} />
+        <VideoPlayer videoTrack={incomingVideo!} />
       </div>
       <div className={styles["video-stream"]}>
-        <video ref={videoRef} autoPlay={true} />
+        <VideoPlayer videoTrack={localVideo!}>
+          {/* Add video and mic controls */}
+        </VideoPlayer>
       </div>
     </section>
   )

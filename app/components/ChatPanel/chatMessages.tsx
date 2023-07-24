@@ -1,27 +1,25 @@
 'use client';
 import styles from './chatMessages.module.css'
 
-export default function MessagePanel() {
+type TMessage = {
+  userId: string
+  message: string | undefined
+}
+
+export default function MessagePanel({ user, messages }: { user: string, messages: TMessage[] }) {
 
   return (
     <div className={styles["message-screen"]}>
       <div className={styles["scrollable"]}>
-        <div className={`${styles["mssg"]} ${styles["mssg-left"]}`}>
-          {`Looooong Message...    Looooong Message...    Looooong Message...    Looooong Message... \nLooooong Message... \nLooooong Message... \n \
-        \nLooooong Message... \nLooooong Message... \nLooooong Message... \nLooooong Message... \n`}
-        </div>
-        <div className={`${styles["mssg"]} ${styles["mssg-left"]}`}>
-          {`Hi,\nIs the UI looking good? What say huh??\nTell me whenever you are free 👀`}
-        </div>
-        <div className={`${styles["mssg"]} ${styles["mssg-right"]}`}>
-          {`Woah!!\nIt's looking awesome.\nAnd I will surely see you again!`}
-        </div>
-        <div className={`${styles["mssg"]} ${styles["mssg-left"]}`}>
-          {`😊`}
-        </div>
-        <div className={`${styles["mssg"]} ${styles["mssg-right"]}`}>
-          {`👌👌👌`}
-        </div>
+        {
+          messages.map((mssg, index) => {
+            return (
+              <div key={index} className={`${styles["mssg"]} ${(mssg.userId === user) ? styles["mssg-right"] : styles["mssg-left"]}`}>
+                {mssg.message}
+              </div>
+            )
+          })
+        }
       </div>
     </div>
   )

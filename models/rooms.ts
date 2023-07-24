@@ -1,7 +1,11 @@
 import mongoose, { Schema } from "mongoose"
 
-const RoomSchema = new Schema({
+type TRoom = {
+  status: string
+}
+
+const RoomSchema = new Schema<TRoom>({
   status: String
 })
 
-export default mongoose.models.Room ?? mongoose.model("Room", RoomSchema)
+export default mongoose.models.Room as mongoose.Model<TRoom> ?? mongoose.model<TRoom>("Room", RoomSchema)
