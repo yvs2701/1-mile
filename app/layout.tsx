@@ -1,7 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import AuthProvider from './components/AuthProvider/provider'
+import AuthProvider from '@/components/AuthProvider/provider'
 
 const inter = Inter({ weight: ['400'], subsets: ['latin'], display: 'swap' })
 

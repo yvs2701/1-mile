@@ -1,18 +1,18 @@
 'use client';
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
-import styles from './page.module.css'
 import { Inter } from 'next/font/google'
 import { signOut } from 'next-auth/react'
 import { useSession } from 'next-auth/react'
-import { Secondary } from './components/Button/button'
 import { RtmChannel } from "agora-rtm-sdk"
 import { ICameraVideoTrack, IRemoteVideoTrack, IAgoraRTCClient, IRemoteAudioTrack } from "agora-rtc-sdk-ng"
-import ChatPanelLayout from './components/ChatPanel/layout'
-import VideoPanel from './components/VideoPanel/page'
-import anon from '@/public/anonymous-user.svg'
-import logo from '@/public/logo.png'
+import { Secondary } from '@/components/Button/button'
+import ChatPanelLayout from '@/components/ChatPanel/layout'
+import VideoPanel from '@/components/VideoPanel/page'
+import styles from './page.module.css'
 
+const anon = '/anonymous-user.svg'
+const logo = '/logo.png'
 const inter = Inter({ weight: ['700'], subsets: ['latin'], display: 'swap' })
 
 type TCreateRoomResponse = {
