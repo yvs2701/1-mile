@@ -60,7 +60,9 @@ async function connectToAgoraRtc(
   onAudioConnect: any,
   token: string
 ) {
+  /* DYNAMIC IMPORT */
   const { default: AgoraRTC } = await import("agora-rtc-sdk-ng")
+  AgoraRTC.setLogLevel(3)
 
   const client = AgoraRTC.createClient({
     mode: "rtc",
@@ -107,7 +109,7 @@ async function connectToAgoraRtm(
     token,
   })
   const channel = client.createChannel(roomId)
-  
+
   // Display connection state changes
   // client.on('ConnectionStateChanged', function (state, reason) {
   //   console.log("State changed To:", state + "\nReason:", reason)
@@ -134,7 +136,7 @@ async function connectToAgoraRtm(
 
 export default function Home() {
   const { data: session, status } = useSession({ required: true })
-  const [userId] = useState<string>(session?.user?.email ?? parseInt((Math.random() * 1e6).toString()).toString())
+  const [userId, setUserId] = useState<string>(parseInt((Math.random() * 1e6).toString()).toString())
   const [currRoom, setCurrRoom] = useState<Room | null>(null)
 
   const [messages, setMessages] = useState<TMessage[]>([])
@@ -148,24 +150,31 @@ export default function Home() {
   const rtcClientRef = useRef<IAgoraRTCClient>()
 
   useEffect(() => {
-    // // Join a room immediately after signing in !!
-    // (async () => {
-    //   await connectToARoom()
-    // })()
-    return () => {
-      if (channelRef.current) {
-        channelRef.current.leave()
-      }
+    console.log('Status changed to', status)
+    console.log('Current UserId: ', userId)
 
-      if (rtcClientRef.current) {
-        rtcClientRef.current.leave()
-      }
+    if (status === "authenticated") {
+      setUserId((prev) => {
+        if (session?.user?.id) {
+          console.log('Setting userId to', session.user.id)
+          return session.user.id
+        }
 
-      if (currRoom !== null) {
-        changeRoomStatus(currRoom._id)
-      }
+        console.log('userId is', prev)
+        return prev
+      })
     }
-  }, [currRoom])
+  }, [status])
+
+  useEffect(() => {
+    console.log('Authenticated! UserId: ', userId)
+    // Join a room immediately after signing in !!
+    // placing a semicolon before IIFFE helps to avoid linter warning against
+    // any value returned just above this line being treated as a function call
+    ; (async () => {
+      await connectToARoom()
+    })()
+  }, [userId])
 
   async function handleSubmitClick(event: React.MouseEvent<HTMLElement>) {
     event.preventDefault()
@@ -188,17 +197,17 @@ export default function Home() {
   }
 
   async function handleSignOut() {
-      if (channelRef.current) {
-        channelRef.current.leave()
-      }
+    if (channelRef.current) {
+      channelRef.current.leave()
+    }
 
-      if (rtcClientRef.current) {
-        rtcClientRef.current.leave()
-      }
+    if (rtcClientRef.current) {
+      rtcClientRef.current.leave()
+    }
 
-      if (currRoom !== null) {
-        await changeRoomStatus(currRoom._id)
-      }
+    if (currRoom !== null) {
+      await changeRoomStatus(currRoom._id)
+    }
     await signOut()
   }
 
@@ -211,9 +220,9 @@ export default function Home() {
     if (channelRef.current) {
 
       await channelRef.current.leave()
-      if (currRoom)
+      if (currRoom !== null) {
         await changeRoomStatus(currRoom._id)
-      setCurrRoom(null)
+      }
     }
 
     if (rtcClientRef.current) {
@@ -276,24 +285,24 @@ export default function Home() {
 
   return (
     status !== "authenticated" ? <>Please Sign-in to continue</> :
-    <>
-      <nav className={styles['navbar']}>
-        <div className={styles['navbar-left']}>
-          <Image src={logo} alt='logo' width={50} height={50} className={styles['navbar-logo']} />
-          <h3 className={`${inter.className} ${styles['navbar-brand']}`}>1-mile</h3>
-        </div>
-        <div className={styles['navbar-right']}>
-          <div className={styles['navbar-right-user']}>
-            <Image src={session?.user?.image ?? anon} alt='user pfp' width={50} height={50} />
-            <span>{session?.user?.name ?? 'Unknown User'}</span>
+      <>
+        <nav className={styles['navbar']}>
+          <div className={styles['navbar-left']}>
+            <Image src={logo} alt='logo' width={50} height={50} className={styles['navbar-logo']} />
+            <h3 className={`${inter.className} ${styles['navbar-brand']}`}>1-mile</h3>
           </div>
-          <Secondary label="Sign Out" handleClick={handleSignOut} />
-        </div>
-      </nav>
-      <main className={styles.main}>
-        <VideoPanel incomingVideo={themVideo} incomingAudio={themAudio} localVideo={myVideo} />
-        <ChatPanelLayout user={userId} messageInput={input} setMessageInput={setInput} messages={messages} handleNextClick={connectToARoom} handleSubmitClick={handleSubmitClick} />
-      </main>
-    </>
+          <div className={styles['navbar-right']}>
+            <div className={styles['navbar-right-user']}>
+              <Image src={session?.user?.image ?? anon} alt='user pfp' width={50} height={50} />
+              <span>{session?.user?.name ?? 'Unknown User'}</span>
+            </div>
+            <Secondary label="Sign Out" handleClick={handleSignOut} />
+          </div>
+        </nav>
+        <main className={styles.main}>
+          <VideoPanel incomingVideo={themVideo} incomingAudio={themAudio} localVideo={myVideo} />
+          <ChatPanelLayout user={userId} messageInput={input} setMessageInput={setInput} messages={messages} handleNextClick={connectToARoom} handleSubmitClick={handleSubmitClick} />
+        </main>
+      </>
   )
 }

@@ -8,6 +8,17 @@ const handler = NextAuth({
       clientSecret: process.env.GITHUB_AUTH_SECRET!,
     }),
   ],
+  callbacks: {
+    session: async ({ session, token }) => {
+      if (session?.user) {
+        session.user.id = token.sub;
+      }
+      return session;
+    },
+  },
+  session: {
+    strategy: 'jwt',
+  },
 })
 
 export { handler as GET, handler as POST }
