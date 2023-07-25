@@ -165,15 +165,16 @@ export default function Home() {
         changeRoomStatus(currRoom._id)
       }
     }
-  }, [])
+  }, [currRoom])
 
-  async function handleSubmitClick(e: React.FormEvent) {
-    e.preventDefault()
+  async function handleSubmitClick(event: React.MouseEvent<HTMLElement>) {
+    event.preventDefault()
 
     await channelRef.current?.sendMessage({
       text: input,
     })
-    /* HANDLE ERRORS IN SENDING THE MESSAGE */
+
+    /* [FIX ME]: HANDLE ERRORS IN SENDING THE MESSAGE */
 
     setMessages((curr) => [
       ...curr,
@@ -186,13 +187,29 @@ export default function Home() {
     setInput("")
   }
 
+  async function handleSignOut() {
+      if (channelRef.current) {
+        channelRef.current.leave()
+      }
+
+      if (rtcClientRef.current) {
+        rtcClientRef.current.leave()
+      }
+
+      if (currRoom !== null) {
+        await changeRoomStatus(currRoom._id)
+      }
+    await signOut()
+  }
+
   async function connectToARoom() {
     setThemAudio(undefined)
     setThemVideo(undefined)
-    setMyVideo(undefined)
+    // setMyVideo(undefined)
     setMessages([])
 
     if (channelRef.current) {
+
       await channelRef.current.leave()
       if (currRoom)
         await changeRoomStatus(currRoom._id)
@@ -200,6 +217,7 @@ export default function Home() {
     }
 
     if (rtcClientRef.current) {
+      /* [FIX ME]: CLIENT DOESNT NEED TO LEAVE AND REAUTHENTICATE AGAIN AND AGAIN */
       rtcClientRef.current.leave()
     }
 
@@ -269,12 +287,12 @@ export default function Home() {
             <Image src={session?.user?.image ?? anon} alt='user pfp' width={50} height={50} />
             <span>{session?.user?.name ?? 'Unknown User'}</span>
           </div>
-          <Secondary label="Sign Out" handleClick={signOut} />
+          <Secondary label="Sign Out" handleClick={handleSignOut} />
         </div>
       </nav>
       <main className={styles.main}>
         <VideoPanel incomingVideo={themVideo} incomingAudio={themAudio} localVideo={myVideo} />
-        <ChatPanelLayout user={userId} messages={messages} handleNextClick={connectToARoom} handleSubmitClick={handleSubmitClick} />
+        <ChatPanelLayout user={userId} messageInput={input} setMessageInput={setInput} messages={messages} handleNextClick={connectToARoom} handleSubmitClick={handleSubmitClick} />
       </main>
     </>
   )

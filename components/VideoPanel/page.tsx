@@ -36,7 +36,7 @@ export default function VideoPanel({ incomingVideo, incomingAudio, localVideo }:
       <div className={styles["video-stream"]}>
         {
           localVideo && <VideoPlayer videoTrack={localVideo}>
-            {/* Add video and mic controls */}
+            {/* [FIX ME]: ADD VIDEO AND MIC CONTROLS */}
           </VideoPlayer>
         }
       </div>

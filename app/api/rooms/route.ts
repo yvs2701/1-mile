@@ -69,13 +69,25 @@ export async function GET(req: Request) {
 
       console.log('\x1b[34mPicked room:\x1b[0m', room)
 
-      room!.status = "chatting"
-      room!.save()
+      if (room === null) {
+        const response = {
+          success: true,
+          room,
+          rtcToken: [],
+          rtmToken: [],
+        }
+        console.log('\x1b[34mResponse:\x1b[0m', response)
+        return NextResponse.json(response, { status: 200 })
+      }
+
+
+      room.status = "chatting"
+      room.save()
 
       const response = {
         success: true,
         room,
-        rtcToken: getRtcToken(room!._id.toString(), userId),
+        rtcToken: getRtcToken(room._id.toString(), userId),
         rtmToken: getRtmToken(userId),
       }
       console.log('\x1b[34mResponse:\x1b[0m', response)

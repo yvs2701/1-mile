@@ -9,6 +9,9 @@
   width: 100%;
   min-width: 0; /* To prevent content overflow */
   min-height: 0; /* To prevent content overflow */
+
+  background: var(--foreground-rgb);
+  border-radius: var(--default-radius);
 }
 
 .video-screen>.video-stream>video {

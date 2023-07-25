@@ -23,8 +23,7 @@
 
 .mssg {
   display: inline-block;
-  white-space: pre-wrap;
-  /* preserve text formatting */
+  white-space: pre-wrap; /* preserve text formatting */
   margin: var(--default-padding) 0;
   padding: var(--default-padding) calc(var(--default-padding)*2);
 
