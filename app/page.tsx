@@ -124,7 +124,7 @@ async function connectToAgoraRtm(
   })
 
   channel.on('MemberCountUpdated', function (memberCount) {
-    console.log("Member count updated:", memberCount)
+    console.log("Current channel:", channel.channelId, "RTC: Member count updated:", memberCount)
   })
 
   return {
@@ -151,7 +151,7 @@ export default function Home() {
 
   useEffect(() => {
     console.log('Status changed to', status)
-    console.log('Current UserId: ', userId)
+    console.log('Current UserId:', userId)
 
     if (status === "authenticated") {
       setUserId((prev) => {
@@ -167,14 +167,48 @@ export default function Home() {
   }, [status])
 
   useEffect(() => {
-    console.log('Authenticated! UserId: ', userId)
-    // Join a room immediately after signing in !!
-    // placing a semicolon before IIFFE helps to avoid linter warning against
-    // any value returned just above this line being treated as a function call
-    ; (async () => {
-      await connectToARoom()
-    })()
+    if (status === "authenticated") {
+      console.log('Authenticated! UserId:', userId)
+      // Join a room immediately after signing in !!
+      // placing a semicolon before IIFFE helps to avoid linter warning against
+      // any value returned just above this line being treated as a function call
+      ; (async () => {
+        await connectToARoom()
+      })()
+    } else {
+      console.log('Not authenticated. UserId:', userId)
+    }
   }, [userId])
+
+  useEffect(() => {
+    const exit = (event: BeforeUnloadEvent) => {
+      /* [FIX ME]: This logic doesn't work (and totally won't on mobile devices). Use websockets and traditional server to handle this */
+      event.preventDefault()
+      console.log('Exiting page...')
+
+      // runs when user exits without signing out i.e. by closing/reloading the tab
+      cleanup().then(() => console.log('Cleaned up')).catch((err) => console.log('Error cleaning up', err))
+
+      return 'Please wait while we cleanup the resources...'
+    }
+    window.addEventListener('beforeunload', exit)
+    return () => {
+      console.log('Removing event listener...')
+      window.removeEventListener('beforeunload', exit)
+    }
+  }, [])
+
+  async function cleanup() {
+    if (channelRef.current) {
+      await channelRef.current.leave()
+    }
+    if (rtcClientRef.current) {
+      await rtcClientRef.current.leave()
+    }
+    if (currRoom !== null) {
+      await changeRoomStatus(currRoom._id)
+    }
+  }
 
   async function handleSubmitClick(event: React.MouseEvent<HTMLElement>) {
     event.preventDefault()
@@ -197,17 +231,7 @@ export default function Home() {
   }
 
   async function handleSignOut() {
-    if (channelRef.current) {
-      channelRef.current.leave()
-    }
-
-    if (rtcClientRef.current) {
-      rtcClientRef.current.leave()
-    }
-
-    if (currRoom !== null) {
-      await changeRoomStatus(currRoom._id)
-    }
+    await cleanup()
     await signOut()
   }
 
@@ -217,18 +241,7 @@ export default function Home() {
     // setMyVideo(undefined)
     setMessages([])
 
-    if (channelRef.current) {
-
-      await channelRef.current.leave()
-      if (currRoom !== null) {
-        await changeRoomStatus(currRoom._id)
-      }
-    }
-
-    if (rtcClientRef.current) {
-      /* [FIX ME]: CLIENT DOESNT NEED TO LEAVE AND REAUTHENTICATE AGAIN AND AGAIN */
-      rtcClientRef.current.leave()
-    }
+    await cleanup()
 
     const { room, rtcToken, rtmToken } = await getRandomRoom(userId)
 

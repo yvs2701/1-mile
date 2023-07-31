@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose"
 
 type TRoom = {
-  status: string
+  status: 'waiting' | 'chatting'
 }
 
 const RoomSchema = new Schema<TRoom>({
